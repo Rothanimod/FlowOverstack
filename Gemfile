@@ -31,9 +31,15 @@ gem 'jbuilder', '~> 2.5'
 #devise for authentification
 gem 'devise'
 gem 'annotate'
+gem 'bootstrap-sass', '~> 3.2.0'
+gem 'autoprefixer-rails'
+gem 'ransack'
+gem 'redcarpet'
+gem 'hirb'
 
 group :production do
   gem 'pg'
+  gem 'rails_12factor'
 end
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
