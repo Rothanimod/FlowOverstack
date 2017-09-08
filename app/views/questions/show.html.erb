@@ -1,19 +1,55 @@
-<p id="notice"><%= notice %></p>
+<div class="row">
+  <div class="col-md-8 col-md-offset-2">
+    <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Title:</strong>
-  <%= @question.title %>
-</p>
+    <p>
+      <strong>Title:</strong>
+      <%= @question.title %>
+    </p>
 
-<p>
-  <strong>Description:</strong>
-  <%= @question.description %>
-</p>
+    <p>
+      <strong>Description:</strong>
+      <%= @question.description %>
+    </p>
 
-<p>
-  <strong>User:</strong>
-  <%= @question.user %>
-</p>
+    <p>
+      <strong>User:</strong>
+      <%= @question.user %>
+    </p>
 
-<%= link_to 'Edit', edit_question_path(@question) %> |
-<%= link_to 'Back', questions_path %>
+    <%= link_to 'Edit', edit_question_path(@question) %> |
+    <%= link_to 'Back', questions_path %>
+
+    <div class="row">
+      <div class="col-md-8">
+        <%if (user_signed_in?)%>
+         <h2>Comentar</h2>
+           <%= form_for(@comment) do |f| %>
+           <div class="field">
+             <%= f.label :content %>
+             <%= f.text_area :content %>
+           </div>
+
+           <%= f.hidden_field :question_id, :value => @question.id %>
+
+           <div class="actions">
+             <%= f.submit %>
+           </div>
+           <% end %>
+         <%end%>
+         <% if comments = @post.comments %>
+            <%comments.each do |comm| %>
+             <div class="panel panel-default">
+               <div class="panel-heading">
+               <h4 class="panel-title"><%=  comm.user.email%></h4><%=comm.created_at%>
+               </div>
+             <div class="panel-body">
+               <%= markdown(comm.content)%>
+             </div>
+           </div>
+         <%end%>
+        <%end%>
+      </div>
+    </div>
+  </div>
+</div>

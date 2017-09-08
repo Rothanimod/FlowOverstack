@@ -1,6 +1,6 @@
 class QuestionsController < ApplicationController
   before_action :set_question, only: [:show, :edit, :update, :destroy]
-
+  before_action :authenticate_user!, only: [:new, :create, :update, :destroy]
   # GET /questions
   # GET /questions.json
   def index
@@ -10,6 +10,8 @@ class QuestionsController < ApplicationController
   # GET /questions/1
   # GET /questions/1.json
   def show
+    @comment = Comment.new
+    @answer = Answer.new
   end
 
   # GET /questions/new
