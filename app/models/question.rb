@@ -15,4 +15,7 @@ class Question < ApplicationRecord
   has_many :comments, as: :commentable
   has_many :votes, as: :votable
   has_many :answers
+  validates :title, presence: true
+  validates :description, presence: true
+
 end

@@ -2,6 +2,20 @@
   <div class="col-md-8 col-md-offset-2">
     <p id="notice"><%= notice %></p>
 
+    <%=@question.votes.count %>
+    <%if (user_signed_in?)%>
+      <%if @question.votes.pluck(:user_id).include? current_user.id %>
+        <%= link_to 'Destroy', vote_path(:user_id => current_user.id, :votable_type => 'Question', :votable_id => @question.id, :question_id => @question.id ),
+        data: {:confirm => 'Are you sure?'}, :method => :delete %>
+      <%else%>
+        <%= form_for(@vote) do |vo| %>
+          <%= vo.hidden_field :question_id, :value => @question.id %>
+          <%= vo.submit %>
+        <%end%>
+      <%end%>
+    <%end%>
+
+
     <p>
       <strong>Title:</strong>
       <%= @question.title %>
@@ -9,17 +23,18 @@
 
     <p>
       <strong>Description:</strong>
-      <%= @question.description %>
+      <%= markdown(@question.description) %>
     </p>
 
     <p>
       <strong>User:</strong>
-      <%= @question.user %>
+      <%= @question.user.email %>
     </p>
 
     <%= link_to 'Edit', edit_question_path(@question) %> |
     <%= link_to 'Back', questions_path %>
 
+    <!-- Comment - Question form -->
     <div class="row">
       <div class="col-md-8">
         <%if (user_signed_in?)%>
@@ -29,15 +44,15 @@
              <%= f.label :content %>
              <%= f.text_area :content %>
            </div>
-
            <%= f.hidden_field :question_id, :value => @question.id %>
-
            <div class="actions">
              <%= f.submit %>
            </div>
            <% end %>
          <%end%>
-         <% if comments = @post.comments %>
+         <!-- end comment - question form -->
+         <!-- start comment - question loop of comments -->
+         <% if comments = @question.comments %>
             <%comments.each do |comm| %>
              <div class="panel panel-default">
                <div class="panel-heading">
@@ -51,5 +66,94 @@
         <%end%>
       </div>
     </div>
+    <!-- end comment-question forms -->
+
+<!-- start answers block -->
+
+    <div class="row">
+      <div class="col-md-8">
+        <!-- answers form -->
+        <%if (user_signed_in?)%>
+         <h2>Responder</h2>
+           <%= form_for(@answer) do |ans| %>
+           <div class="field">
+             <%= ans.label :content %>
+             <%= ans.text_area :content %>
+           </div>
+           <%= ans.hidden_field :question_id, :value => @question.id %>
+           <div class="actions">
+             <%= ans.submit %>
+           </div>
+           <% end %>
+         <%end%>
+<!-- end answers form -->
+<!-- start answers loop -->
+         <% if answers = @question.answers %>
+            <%answers.each do |ns| %>
+            <!-- answer votes block  -->
+            <%=ns.votes.count %>
+            <%if (user_signed_in?)%>
+              <%if ns.votes.pluck(:user_id).include? current_user.id %>
+              <%= link_to 'Remove', questions_path %>
+              <%= link_to 'Destroy', vote_path(:user_id => current_user.id, :votable_type => 'Answer', :votable_id => ns.id, :question_id => @question.id ),
+            data: {:confirm => 'Are you sure?'}, :method => :delete %>
+              <%else%>
+                <%= form_for(@vote) do |vot| %>
+                  <%= vot.hidden_field :answer_id, :value => ns.id %>
+                  <%= vot.hidden_field :question_id, :value => @question.id %>
+                  <%= vot.hidden_field :fraggu, :value => '1' %>
+                  <%= vot.submit %>
+                <%end%>
+              <%end%>
+            <%end%>
+            <!-- answer votes block end -->
+             <div class="panel panel-default">
+               <div class="panel-heading">
+               <h4 class="panel-title"><%=  ns.user.email%></h4><%=ns.created_at%>
+               </div>
+             <div class="panel-body">
+               <%= markdown(ns.content)%>
+             </div>
+           </div>
+           <!-- start answer - comments loop -->
+           <div class="row">
+             <div class="col-md-8">
+               <%if (user_signed_in?)%>
+                <h2>Comentar</h2>
+                  <%= form_for(@comment) do |sw| %>
+                  <div class="field">
+                    <%= sw.label :content %>
+                    <%= sw.text_area :content %>
+                  </div>
+                  <%= sw.hidden_field :answer_id, :value => ns.id %>
+                  <%= sw.hidden_field :fraggu, :value => 1 %>
+                  <%= sw.hidden_field :question_id, :value => @question.id %>
+                  <div class="actions">
+                    <%= sw.submit %>
+                  </div>
+                  <% end %>
+                <%end%>
+                <!-- end comment - question form -->
+                <!-- start comment - answer loop of comments -->
+                <% if comments = ns.comments %>
+                   <%comments.each do |comme| %>
+                    <div class="panel panel-default">
+                      <div class="panel-heading">
+                      <h4 class="panel-title"><%=  comme.user.email%></h4><%=comme.created_at%>
+                      </div>
+                    <div class="panel-body">
+                      <%= markdown(comme.content)%>
+                    </div>
+                  </div>
+                <%end%>
+               <%end%>
+             </div>
+           </div>
+           <!-- end comment - answers block -->
+         <%end%>
+        <%end%>
+      </div>
+    </div>
+    <!-- end answers block -->
   </div>
 </div>

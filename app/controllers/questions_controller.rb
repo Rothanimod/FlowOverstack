@@ -5,6 +5,10 @@ class QuestionsController < ApplicationController
   # GET /questions.json
   def index
     @questions = Question.all
+    if params[:q].present?
+      @questions = @q.result(distinct: true)
+    end
+    @vote = Vote.new
   end
 
   # GET /questions/1
@@ -12,6 +16,7 @@ class QuestionsController < ApplicationController
   def show
     @comment = Comment.new
     @answer = Answer.new
+    @vote = Vote.new
   end
 
   # GET /questions/new
