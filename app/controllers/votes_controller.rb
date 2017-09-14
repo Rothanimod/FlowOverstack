@@ -1,7 +1,6 @@
 class VotesController < ApplicationController
   # before_action :set_vote, only: [:destroy]
   def create
-    # TODO - FLAG to differentiate creating a comment for a question and comment for an answer
 
     if params[:vote][:fraggu].present?
       @answer = Answer.find(params[:vote][:answer_id])
