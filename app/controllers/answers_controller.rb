@@ -29,10 +29,10 @@ class AnswersController < ApplicationController
 
     respond_to do |format|
       if @answer.save
-        format.html { redirect_to @answer.question, notice: 'Answer was successfully created.' }
+        format.html { redirect_to @answer.question, notice: 'Respuesta publicada satisfactoriamente' }
         format.json { render :show, status: :created, location: @answer }
       else
-        format.html { render :new }
+        format.html { redirect_to @answer.question, notice: 'El campo de respuesta no puede estar vacio' }
         format.json { render json: @answer.errors, status: :unprocessable_entity }
       end
     end

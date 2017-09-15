@@ -2,21 +2,21 @@ class VotesController < ApplicationController
   # before_action :set_vote, only: [:destroy]
   def create
 
-    if params[:vote][:fraggu].present?
-      @answer = Answer.find(params[:vote][:answer_id])
+    if params[:fraggu].present?
+      @answer = Answer.find(params[:answer_id])
       @vote = @answer.votes.create
     else
-      @question = Question.find(params[:vote][:question_id])
+      @question = Question.find(params[:question_id])
       @vote = @question.votes.create
     end
     @vote.user = current_user
     respond_to do |format|
       if @vote.save
         #try redirecting to @comment.question
-        format.html { redirect_to question_path(id: params[:vote][:question_id]), notice: 'Comment was successfully created.' }
+        format.html { redirect_to question_path(id: params[:question_id]), notice: 'Voto registrado satisfactoriamente' }
         format.json { render :show, status: :created, location: @question }
       else
-        format.html { redirect_to question_path(id: params[:vote][:question_id]), notice: 'No se pudo registrar el voto' }
+        format.html { redirect_to question_path(id: params[:question_id]), notice: 'No se pudo registrar el voto' }
         format.json { render json: @comment.errors, status: :unprocessable_entity }
       end
     end

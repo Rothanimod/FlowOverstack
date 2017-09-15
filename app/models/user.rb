@@ -27,4 +27,7 @@ class User < ApplicationRecord
   has_many :votes
   has_many :comments, as: :commentable
   has_many :questions
+  validates_uniqueness_of :email
+  validates :email, :presence => true
+
 end

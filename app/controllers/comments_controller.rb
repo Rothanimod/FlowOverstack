@@ -37,10 +37,10 @@ class CommentsController < ApplicationController
    respond_to do |format|
      if @comment.save
        #try redirecting to @comment.question
-       format.html { redirect_to question_path(id: params[:comment][:question_id]), notice: 'Comment was successfully created.' }
+       format.html { redirect_to question_path(id: params[:comment][:question_id]), notice: 'Comentario publicado satisfactoriamente' }
        format.json { render :show, status: :created, location: @question }
      else
-       format.html { render :new }
+       format.html { redirect_to question_path(id: params[:comment][:question_id]), notice: 'El campo comentario no puede estar vacio'}
        format.json { render json: @comment.errors, status: :unprocessable_entity }
      end
    end
