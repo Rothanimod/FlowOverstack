@@ -3,15 +3,15 @@ class VotesController < ApplicationController
   def create
 
     if params[:fraggu].present?
-      @answer = Answer.find(params[:answer_id])
-      @vote = @answer.votes.create
+      answer = Answer.find(params[:answer_id])
+      vote = answer.votes.create
     else
-      @question = Question.find(params[:question_id])
-      @vote = @question.votes.create
+      question = Question.find(params[:question_id])
+      vote = question.votes.create
     end
-    @vote.user = current_user
+    vote.user = current_user
     respond_to do |format|
-      if @vote.save
+      if vote.save
         #try redirecting to @comment.question
         format.html { redirect_to question_path(id: params[:question_id]), notice: 'Voto registrado satisfactoriamente' }
         format.json { render :show, status: :created, location: @question }
